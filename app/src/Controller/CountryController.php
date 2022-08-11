@@ -29,6 +29,33 @@ class CountryController extends AbstractController
         );
         $content = $response->toArray();
 
+        // sorting by population
+        if ($request->query->getAlpha('sort') == 'population') {
+            if ($request->query->getAlpha('direction') == 'desc') {
+                usort($content, function ($a, $b){
+                    return $b['population'] <=> $a['population'];
+                });
+            } else {
+                usort($content, function ($a, $b){
+                    return $a['population'] <=> $b['population'];
+                });
+            }
+        }
+
+        // sorting by region
+        if ($request->query->getAlpha('sort') == 'region') {
+            if ($request->query->getAlpha('direction') == 'desc') {
+                usort($content, function ($a, $b){
+                    return $b['region'] <=> $a['region'];
+                });
+            } else {
+                usort($content, function ($a, $b){
+                    return $a['region'] <=> $b['region'];
+                });
+            }
+        }
+
+        // pagination
         $pagination = $this->paginator->paginate(
             $content,
             $request->query->getInt('page', 1),
@@ -51,6 +78,18 @@ class CountryController extends AbstractController
             'https://restcountries.com/v2/region/Europe?fields=name,population,region'
         );
         $content = $response->toArray();
+
+        if ($request->query->getAlpha('sort') == 'population') {
+            if ($request->query->getAlpha('direction') == 'desc') {
+                usort($content, function ($a, $b){
+                    return $b['population'] <=> $a['population'];
+                });
+            } else {
+                usort($content, function ($a, $b){
+                    return $a['population'] <=> $b['population'];
+                });
+            }
+        }
 
         $pagination = $this->paginator->paginate(
             $content,
@@ -84,6 +123,18 @@ class CountryController extends AbstractController
         foreach ($countries as $country) {
             if ($country['population'] < $lithuaniaPopulation) {
                 $result[] = $country;
+            }
+        }
+
+        if ($request->query->getAlpha('sort') == 'population') {
+            if ($request->query->getAlpha('direction') == 'desc') {
+                usort($result, function ($a, $b){
+                    return $b['population'] <=> $a['population'];
+                });
+            } else {
+                usort($result, function ($a, $b){
+                    return $a['population'] <=> $b['population'];
+                });
             }
         }
 
