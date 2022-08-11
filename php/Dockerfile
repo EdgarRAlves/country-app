@@ -8,7 +8,7 @@ RUN apt update \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip
 
-WORKDIR /var/www/oddschecker
+WORKDIR /var/www/country_app
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
