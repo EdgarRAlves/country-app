@@ -1,4 +1,4 @@
-# oddschecker (draft)
+# Task for Oddschecker Global Media - Country app (draft)
 
 1. Install Docker in your local machine
 2. Clone this repository
