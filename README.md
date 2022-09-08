@@ -5,7 +5,7 @@ _**Built using the free API:** https://restcountries.com/_
 _**Technologies used**: Symfony Framework, Docker_
 
 ### Instructions on how to start the app:
-1. Install Docker in your local machine
+1. Install Docker on your local machine
 2. Clone this repository
 3. In the root directory, run: `docker-compose up -d --build`
 4. Go to this URL: http://localhost:8080/countries

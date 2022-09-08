@@ -12,8 +12,9 @@
 
     <div class="wrapper">
         <h1>List of countries</h1>
-        <a class="btn btn-primary mb-2" href="/countries/Europe" role="button">Only in Europe</a>
-        <a class="btn btn-primary mb-2" href="/countries/smallerThanLithuania" role="button">Smaller in population than Lithuania</a>
+        <a class="btn btn-primary mb-2" href="{{ path('countries') }}" role="button">All countries</a>
+        <a class="btn btn-primary mb-2" href="{{ path('countries')~'?filter=europe'}}" role="button">Only in Europe</a>
+        <a class="btn btn-primary mb-2" href="{{ path('countries')~'?filter=smallerthanlithuania'}}" role="button">Smaller in population than Lithuania</a>
         <table class="table table-striped table-hover table-bordered">
             <thead>
             <tr>

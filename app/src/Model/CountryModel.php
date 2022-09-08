@@ -2,25 +2,27 @@
 
 namespace App\Model;
 
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CountryModel
 {
-    private $client;
+    private HttpClientInterface $client;
+    private PaginatorInterface $paginator;
 
-    public function __construct(HttpClientInterface $client)
+    public function __construct(HttpClientInterface $client, PaginatorInterface $paginator)
     {
         $this->client = $client;
+        $this->paginator = $paginator;
     }
 
-    public function getCountries(string $sort, string $direction, array $filter) {
-        if (in_array('all', $filter)) {
-            $countryArray = $this->getAllCountries();
-        } elseif (in_array('europe', $filter)) {
+    public function getCountries(string $sort, string $direction, string $filter): array
+    {
+        if ($filter == 'europe') {
             $countryArray = $this->getCountriesEurope();
-        }
+        } elseif ($filter == 'smallerthanlithuania') {
+            $countryArray = $this->getAllCountries();
 
-        if (in_array('smallerThanLithuania', $filter)) {
             $countryNames = array_column($countryArray, 'name');
             $lithuania = array_search('Lithuania', $countryNames);
             $lithuaniaPopulation = $countryArray[$lithuania]['population'];
@@ -30,6 +32,8 @@ class CountryModel
                     unset($countryArray[$key]);
                 }
             }
+        } elseif (empty($filter)) {
+            $countryArray = $this->getAllCountries();
         }
 
         if (in_array($sort, ['population', 'region'])) {
@@ -39,7 +43,8 @@ class CountryModel
         return $countryArray;
     }
 
-    public function getAllCountries() {
+    public function getAllCountries(): array
+    {
         $response = $this->client->request(
             'GET',
             'https://restcountries.com/v2/all?fields=name,population,region'
@@ -48,7 +53,8 @@ class CountryModel
         return $response->toArray();
     }
 
-    public function getCountriesEurope() {
+    public function getCountriesEurope(): array
+    {
         $response = $this->client->request(
             'GET',
             'https://restcountries.com/v2/region/Europe?fields=name,population,region'
@@ -57,7 +63,8 @@ class CountryModel
         return $response->toArray();
     }
 
-    public function sort ($content, $key, $direction) {
+    public function sort (array $content, string $key, string $direction): array
+    {
         if ($direction == 'desc') {
             usort($content, function ($a, $b) use($key){
                 return $b[$key] <=> $a[$key];
@@ -69,5 +76,13 @@ class CountryModel
         }
 
         return $content;
+    }
+
+    public function paginate(array $content, int $page, int $limit) {
+        return $this->paginator->paginate(
+            $content,
+            $page,
+            $limit
+        );
     }
 }
