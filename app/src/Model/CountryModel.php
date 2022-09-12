@@ -63,14 +63,14 @@ class CountryModel
         return $response->toArray();
     }
 
-    public function sort (array $content, string $key, string $direction): array
+    public function sort(array $content, string $key, string $direction): array
     {
         if ($direction == 'desc') {
-            usort($content, function ($a, $b) use($key){
+            usort($content, function ($a, $b) use ($key) {
                 return $b[$key] <=> $a[$key];
             });
         } elseif ($direction == 'asc') {
-            usort($content, function ($a, $b) use($key){
+            usort($content, function ($a, $b) use ($key) {
                 return $a[$key] <=> $b[$key];
             });
         }
@@ -78,7 +78,8 @@ class CountryModel
         return $content;
     }
 
-    public function paginate(array $content, int $page, int $limit) {
+    public function paginate(array $content, int $page, int $limit)
+    {
         return $this->paginator->paginate(
             $content,
             $page,
