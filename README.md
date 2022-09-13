@@ -15,4 +15,3 @@ _**Technologies used**: Symfony Framework, Docker_
 2. Filter to only show countries from Europe
 3. Filter to show only countries smaller in population than Lithuania
 4. Sorting (ascending and descending) by population and region
-
