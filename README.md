@@ -5,14 +5,10 @@ _**Built using the free API:** https://restcountries.com/_
 _**Technologies used**: Symfony Framework, Docker_
 
 ### Instructions on how to start the app:
-1. Install Docker on your local machine
-2. Clone this repository
+1. Docker Engine and Docker Compose have to be installed on your local machine
+2. Clone the repository
 3. In the root directory, run: `docker-compose up -d --build`
-4. Go to this URL: http://localhost:8080/countries
-
-Access to the php container: `docker-compose exec php /bin/bash`
-
-After entering php container, run php unit tests: `php bin/phpunit`
+4. Go to: http://localhost:8080/countries
 
 ### Main features:
 1. List all countries with information about its population and region
