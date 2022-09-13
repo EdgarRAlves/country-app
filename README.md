@@ -1,6 +1,6 @@
 # Country app
 
-_**Built using the free API:** https://restcountries.com/_
+This app was originally created as a task for a job interview. The main goal was so show a list of data retrieved from an external API (https://restcountries.com/). I'm trying to improve the app on regular basis.
 
 _**Technologies used**: Symfony Framework, Docker_
 
