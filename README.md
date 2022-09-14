@@ -15,3 +15,9 @@ _**Technologies used**: Symfony Framework, Docker_
 2. Filter to only show countries from Europe
 3. Filter to show only countries smaller in population than Lithuania
 4. Sorting (ascending and descending) by population and region
+
+### Things To Change:
+1. /php folder should be /docker - it's common practice
+2. Change Model to Service - since it's not Model - if i remember, on NSCM we probably had Models, but that was also wrong, so forget bad practices from GS :)
+3. Go deeper with SOLID practices - currently in this project there is none - it's a mess :)
+4. DRY, KISS also good to follow
