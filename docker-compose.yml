@@ -4,7 +4,7 @@ services:
   php:
     container_name: php
     build:
-      context: ./php
+      context: docker
     ports:
       - '9000:9000'
     volumes:
