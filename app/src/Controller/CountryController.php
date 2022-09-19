@@ -1,4 +1,4 @@
-<?php
+<?php // Just remembered - each your writen php file should have strict_types defined ;) Please read and play with it to see what difference it does and why it's good practice to use it ;)
 
 namespace App\Controller;
 
