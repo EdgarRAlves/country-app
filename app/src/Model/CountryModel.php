@@ -16,7 +16,7 @@ class CountryModel
         $this->paginator = $paginator;
     }
 
-    public function getCountries(string $sort, string $direction, string $filter): array
+    public function getCountries(string $sort, string $direction, string $filter): array // Think more about SOLID, KISS and this function - is this function doesn one thing or much more ?
     {
         if ($filter == 'europe') {
             $countryArray = $this->getCountriesEurope();
@@ -24,7 +24,7 @@ class CountryModel
             $countryArray = $this->getAllCountries();
 
             $countryNames = array_column($countryArray, 'name');
-            $lithuania = array_search('Lithuania', $countryNames);
+            $lithuania = array_search('Lithuania', $countryNames); // Hardkode never makes code beautifull 
             $lithuaniaPopulation = $countryArray[$lithuania]['population'];
 
             foreach ($countryArray as $key => $country) {
@@ -53,14 +53,14 @@ class CountryModel
         return $response->toArray();
     }
 
-    public function getCountriesEurope(): array
+    public function getCountriesEurope(): array // I would suggest to think more about naming convention - Look at what actualy does this function and what it names is ? maybe there is better name fot it ? I have some suggestion in mind but will not tell you right now :)
     {
         $response = $this->client->request(
             'GET',
-            'https://restcountries.com/v2/region/Europe?fields=name,population,region'
+            'https://restcountries.com/v2/region/Europe?fields=name,population,region' // Think what would happen if url, pass/token would change on the other side - what you would need to do in order to fix it without doeing any changes to the code ?
         );
 
-        return $response->toArray();
+        return $response->toArray(); // Also - good code is that could handle unexpected situations - what would happen if client o other obect in the chanin would throw exception ? And on this line - can you guaranty that $response alwyas return array ? maybe there wouldn't be any kind of response or response style would change ?
     }
 
     public function sort(array $content, string $key, string $direction): array
