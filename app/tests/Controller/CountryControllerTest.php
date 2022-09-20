@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Controller; // So ye :| what kind of thest this is Unit, Integration, Functional ? <- I know which one this is but, your structure of tests doesn't tell
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
