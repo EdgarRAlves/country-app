@@ -7,14 +7,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CountryRepository
 {
-    private HttpClientInterface $client;
-    private PaginatorInterface $paginator;
-
-    public function __construct(HttpClientInterface $client, PaginatorInterface $paginator)
-    {
-        $this->client = $client;
-        $this->paginator = $paginator;
-    }
+    public function __construct(
+        private HttpClientInterface $client,
+        private PaginatorInterface $paginator
+    ) {}
 
     public function getCountries(string $sort, string $direction, string $filter): array // Think more about SOLID, KISS and this function - is this function doesn one thing or much more ?
     {
