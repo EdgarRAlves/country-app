@@ -19,7 +19,3 @@ This app was originally created as a task for a job interview. The main goal was
 2. Change Model to Service - since it's not Model - if i remember, on NSCM we probably had Models, but that was also wrong, so forget bad practices from GS :)
 3. Go deeper with SOLID practices - currently in this project there is none - it's a mess :)
 4. DRY, KISS also good to follow
-
-### Some tips ...
-
-1. https://www.perforce.com/blog/vcs/8-version-control-best-practices
