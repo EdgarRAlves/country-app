@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Model;
+namespace App\Service;
 
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class CountryModel
+class CountryRepository
 {
     private HttpClientInterface $client;
     private PaginatorInterface $paginator;
@@ -24,7 +24,7 @@ class CountryModel
             $countryArray = $this->getAllCountries();
 
             $countryNames = array_column($countryArray, 'name');
-            $lithuania = array_search('Lithuania', $countryNames); // Hardkode never makes code beautifull 
+            $lithuania = array_search('Lithuania', $countryNames); // Hardkode never makes code beautifull
             $lithuaniaPopulation = $countryArray[$lithuania]['population'];
 
             foreach ($countryArray as $key => $country) {
