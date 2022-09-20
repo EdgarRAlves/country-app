@@ -12,8 +12,7 @@ class CountryController extends AbstractController
 {
     public function __construct(
         private CountryRepository $countryRepo
-    ) {}
-    /*What if there would be more than one Data provider , for ex. - now you think about database/cache - Just think about this Controller, how to change so that this code would not care who is providing data :) Think about decorator pattern
+    ) {} /*What if there would be more than one Data provider , for ex. - now you think about database/cache - Just think about this Controller, how to change so that this code would not care who is providing data :) Think about decorator pattern
     Also, there is another way to get rid of constructor - think about autowiring ;)*/
 
     #[Route('/countries', name: 'countries')]
