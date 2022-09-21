@@ -33,12 +33,12 @@ class CountryController extends AbstractController
 
         $content = $this->countryRepo->getCountries($sort, $direction, $filter);
 
-        $pagination = $this->paginate($content, $page, $limit);
+        $countries = $this->paginate($content, $page, $limit);
 
         return $this->render(
             'country/index.html.twig',
             [
-                'countries' => $pagination, // Bad naming sense :D
+                'countries' => $countries, // Bad naming sense :D
             ]
         );
     }
