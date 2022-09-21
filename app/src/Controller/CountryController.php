@@ -38,7 +38,7 @@ class CountryController extends AbstractController
         return $this->render(
             'country/index.html.twig',
             [
-                'countries' => $countries, // Bad naming sense :D
+                'countries' => $countries,
             ]
         );
     }
