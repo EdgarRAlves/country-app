@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CountryRepository
 {
     public function __construct(
         private HttpClientInterface $client,
-        private PaginatorInterface $paginator
     ) {}
 
     public function getCountries(string $sort, string $direction, string $filter): array // Think more about SOLID, KISS and this function - is this function doesn one thing or much more ?
@@ -74,14 +72,5 @@ class CountryRepository
         }
 
         return $content;
-    }
-
-    public function paginate(array $content, int $page, int $limit)
-    {
-        return $this->paginator->paginate(
-            $content,
-            $page,
-            $limit
-        );
     }
 }
