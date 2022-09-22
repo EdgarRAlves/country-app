@@ -16,20 +16,12 @@ class CountryRepository
     {
         if ($filter == 'europe') {
             $countryArray = $this->getCountriesEurope();
-        } elseif ($filter == 'smallerthanlithuania') {
+        } else {
             $countryArray = $this->getAllCountries();
+        }
 
-            $countryNames = array_column($countryArray, 'name');
-            $lithuania = array_search('Lithuania', $countryNames); // Hardkode never makes code beautifull
-            $lithuaniaPopulation = $countryArray[$lithuania]['population'];
-
-            foreach ($countryArray as $key => $country) {
-                if ($country['population'] > $lithuaniaPopulation) {
-                    unset($countryArray[$key]);
-                }
-            }
-        } elseif (empty($filter)) {
-            $countryArray = $this->getAllCountries();
+        if ($filter == 'smallerthanlithuania') {
+            $countryArray = $this->filterCountriesSmallerThanLithuania($countryArray);
         }
 
         if (in_array($sort, ['population', 'region'])) {
@@ -57,6 +49,21 @@ class CountryRepository
         );
 
         return $response->toArray(); // Also - good code is that could handle unexpected situations - what would happen if client o other obect in the chanin would throw exception ? And on this line - can you guaranty that $response alwyas return array ? maybe there wouldn't be any kind of response or response style would change ?
+    }
+
+    public function filterCountriesSmallerThanLithuania(array $countryArray): array
+    {
+        $countryNames = array_column($countryArray, 'name');
+        $lithuania = array_search('Lithuania', $countryNames); // Hardkode never makes code beautifull
+        $lithuaniaPopulation = $countryArray[$lithuania]['population'];
+
+        foreach ($countryArray as $key => $country) {
+            if ($country['population'] > $lithuaniaPopulation) {
+                unset($countryArray[$key]);
+            }
+        }
+
+        return $countryArray;
     }
 
     public function sort(array $content, string $key, string $direction): array
