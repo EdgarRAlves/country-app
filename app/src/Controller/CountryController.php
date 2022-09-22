@@ -22,7 +22,7 @@ class CountryController extends AbstractController
         $data = $country->getCountries($sort, $direction, $filter);
 
         $page = $request->query->getInt('page', 1);
-        $limit = $request->query->getInt('limit', 12);
+        $limit = $request->query->getInt('limit', $this->getParameter('pagination.default_limit'));
         $countries = $paginator->paginate($data, $page, $limit);
 
         return $this->render(
