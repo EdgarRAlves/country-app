@@ -6,7 +6,7 @@ namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class CountryRepository
+class Country
 {
     public function __construct(
         private HttpClientInterface $client,
