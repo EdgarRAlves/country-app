@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\Country;
-use App\Service\FilterRegion;
-use App\Service\FilterSmallerThan;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +16,7 @@ class CountryController extends AbstractController
     #[Route('/countries', name: 'countries')]
     public function index(Country $countryService, PaginatorInterface $paginator, Request $request): Response
     {
-        $sort = $request->query->getAlpha('sort'); //well it's up to you bet there is other ways to get request :) Just think - if you need to test this code - how you test would look
+        $sort = $request->query->getAlpha('sort');
         $direction = $request->query->getAlpha('direction');
         $countryFilter = $request->query->get('country') ?? "";
         $regionFilter = $request->query->get('region') ?? "";
