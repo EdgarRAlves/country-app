@@ -12,9 +12,30 @@
 
     <div class="wrapper">
         <h1>List of countries</h1>
-        <a class="btn btn-primary mb-2" href="{{ path('countries') }}" role="button">All countries</a>
-        <a class="btn btn-primary mb-2" href="{{ path('countries')~'?filter=europe'}}" role="button">Only in Europe</a>
-        <a class="btn btn-primary mb-2" href="{{ path('countries')~'?filter=smallerthanlithuania'}}" role="button">Smaller in population than Lithuania</a>
+        <a class="btn btn-primary mb-2" href="{{ path('countries') }}" role="button">Reset</a>
+
+        <form class="my-2" action="" method="get">
+            <div class="form-group mb-1">
+                <label for="region-select">Filter countries by region:</label>
+                <select class="form-control form-control-sm" name="region">
+                        <option value="">--Choose a region--</option>
+                    {% for countryRegion in countryRegions %}
+                        <option value="{{ countryRegion }}" {% if countryRegion == regionFilter %}selected{% endif %}>{{ countryRegion }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group mb-1">
+                <label for="country-select">Filter countries smaller than (by population):</label>
+                <select class="form-control form-control-sm" name="country">
+                        <option value="">--Choose a country--</option>
+                    {% for countryName in countryNames %}
+                        <option value="{{ countryName }}" {% if countryName == countryFilter %}selected{% endif %}>{{ countryName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-dark btn-sm">Filter</button>
+        </form>
+
         <table class="table table-striped table-hover table-bordered">
             <thead>
             <tr>
