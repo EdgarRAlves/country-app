@@ -14,21 +14,28 @@ use Knp\Component\Pager\PaginatorInterface;
 class CountryController extends AbstractController
 {
     #[Route('/countries', name: 'countries')]
-    public function index(Country $country, PaginatorInterface $paginator, Request $request): Response
+    public function index(Country $countryService, PaginatorInterface $paginator, Request $request): Response
     {
-        $sort = $request->query->getAlpha('sort'); //well it's up to you bet there is other ways to get request :) Just think - if you need to test this code - how you test would look
+        $sort = $request->query->getAlpha('sort');
         $direction = $request->query->getAlpha('direction');
-        $filter = $request->query->getAlpha('filter');
-        $data = $country->getCountries($sort, $direction, $filter);
-
+        $countryFilter = $request->query->get('country') ?? "";
+        $regionFilter = $request->query->get('region') ?? "";
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', $this->getParameter('pagination.default_limit'));
-        $countries = $paginator->paginate($data, $page, $limit);
+
+        $filteredData = $countryService->getFilteredCountries($sort, $direction, $countryFilter, $regionFilter);
+        $countries = $paginator->paginate($filteredData, $page, $limit);
+
+        $unfilteredData = $countryService->getUnfilteredCountries();
 
         return $this->render(
             'country/index.html.twig',
             [
                 'countries' => $countries,
+                'countryNames' => array_column($unfilteredData, 'name'),
+                'countryRegions' => array_unique(array_column($unfilteredData, 'region')),
+                'countryFilter' => $countryFilter,
+                'regionFilter' => $regionFilter,
             ]
         );
     }
