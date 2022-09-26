@@ -9,7 +9,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class Country
 {
     public function __construct(
-        private HttpClientInterface $client,
+        private HttpClientInterface $httpClient,
         private Sort $sort,
         private FilterSmallerThan $filterSmallerThan,
         private FilterRegion $filterRegion
@@ -17,7 +17,7 @@ class Country
 
     public function getFilteredCountries(string $sort, string $direction, string $countryFilter, string $regionFilter): array
     {
-        $countryArray = $this->makeCallToRestCountries();
+        $countryArray = $this->makeCallToGetCountries();
 
         if (!empty($countryFilter)) {
             $countryArray = $this->filterSmallerThan->filterSmallerThanByPopulation($countryArray, $countryFilter);
@@ -36,12 +36,12 @@ class Country
 
     public function getUnfilteredCountries(): array
     {
-        return $this->makeCallToRestCountries();
+        return $this->makeCallToGetCountries();
     }
 
-    public function makeCallToRestCountries(): array
+    public function makeCallToGetCountries(): array
     {
-        $response = $this->client->request(
+        $response = $this->httpClient->request(
             'GET',
             'https://restcountries.com/v2/all?fields=name,population,region' // Think what would happen if url, pass/token would change on the other side - what you would need to do in order to fix it without doeing any changes to the code ?
         );
