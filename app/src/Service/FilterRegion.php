@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-class FilterRegion
+class FilterRegion implements FilterInterface
 {
-    public function filterRegion(array $content, string $region): array
+    public function filter(array $content, string $filter): array
     {
         foreach ($content as $key => $country) {
-            if ($country['region'] != $region) {
+            if ($country['region'] != $filter) {
                 unset($content[$key]);
             }
         }
