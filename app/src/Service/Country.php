@@ -53,7 +53,7 @@ class Country
      */
     public function makeCallToGetCountries(): array
     {
-        $response = $this->httpClient->request('GET', $this->countriesUrl, [
+        $response = $this->httpClient->request('GET', $this->countriesUrl . '/v2/all?fields=name,population,region', [
             'headers' => [
                 'Accept' => 'application/json',
             ],
