@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Service\Filter;
 
-class FilterSmallerThan implements FilterInterface
+class FilterSmallerThan extends FilterDecorator
 {
-    public function filter(array $content, string $filter): array
+    private string $filterSmallerThan;
+
+    public function filter(array $content): array
     {
+        $content = parent::filter($content);
+
         $countryNames = array_column($content, 'name');
-        $countryKey = array_search($filter, $countryNames);
+        $countryKey = array_search($this->filterSmallerThan, $countryNames);
         $countryPopulation = $content[$countryKey]['population'];
 
         foreach ($content as $key => $country) {

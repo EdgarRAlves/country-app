@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service\Filter;
 
-class FilterRegion implements FilterInterface
+class FilterRegion extends FilterDecorator
 {
-    public function filter(array $content, string $filter): array
+    public function filter(array $content): array
     {
+        $content = parent::filter($content);
+
         foreach ($content as $key => $country) {
-            if ($country['region'] != $filter) {
+            if ($country['region'] != $this->filterRegion) {
                 unset($content[$key]);
             }
         }
