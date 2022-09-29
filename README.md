@@ -10,12 +10,6 @@ This app was originally created as a task for a job interview. The main goal was
 
 ### Main features:
 1. List all countries with information about its population and region
-2. Filter to only show countries from Europe
-3. Filter to show only countries smaller in population than Lithuania
-4. Sorting (ascending and descending) by population and region
-
-### Things To Change:
-1. /php folder should be /docker - it's common practice
-2. Change Model to Service - since it's not Model - if i remember, on NSCM we probably had Models, but that was also wrong, so forget bad practices from GS :)
-3. Go deeper with SOLID practices - currently in this project there is none - it's a mess :)
-4. DRY, KISS also good to follow
+2. Filter by region
+3. Filter countries smaller in population than selected country
+4. Sort by population and region
