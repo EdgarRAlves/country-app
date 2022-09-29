@@ -6,5 +6,5 @@ namespace App\Service\Filter;
 
 interface FilterInterface
 {
-    public function filter(array $content): array;
+    public function filter(array $content, string $filter): array;
 }

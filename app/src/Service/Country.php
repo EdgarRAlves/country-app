@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Service\Filter\FilterConcreteComponent;
+use App\Service\Filter\FilterHandler;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -15,17 +15,17 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class Country
 {
     public function __construct(
-        private HttpClientInterface     $httpClient,
-        private Sort                    $sort,
-        private FilterConcreteComponent $filterHandler,
-        private                         $countriesUrl
+        private HttpClientInterface $httpClient,
+        private Sort $sort,
+        private FilterHandler $filterHandler,
+        private $countriesUrl
     ) {}
 
-    public function getFilteredCountries(string $sort, string $direction): array
+    public function getFilteredCountries(string $sort, string $direction, string $countryFilter, string $regionFilter): array
     {
         $countryArray = $this->makeCallToGetCountries();
 
-        $countryArray = $this->filterHandler->filter($countryArray);
+        $countryArray = $this->filterHandler->filter($countryArray, $countryFilter, $regionFilter);
 
         if (in_array($sort, ['population', 'region'])) {
             $countryArray = $this->sort->sort($countryArray, $sort, $direction);
