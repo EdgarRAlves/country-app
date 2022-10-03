@@ -26,6 +26,8 @@ services:
 
     App\Service\Country:
         autowire: true
+        arguments:
+            $countriesUrl: '%env(resolve:COUNTRIES_URL)%'
 
     Knp\Component\Pager:
         autowire: true

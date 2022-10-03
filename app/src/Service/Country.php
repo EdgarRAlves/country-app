@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Service\Filter\FilterHandler;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Country
@@ -11,21 +17,15 @@ class Country
     public function __construct(
         private HttpClientInterface $httpClient,
         private Sort $sort,
-        private FilterSmallerThan $filterSmallerThan,
-        private FilterRegion $filterRegion
+        private FilterHandler $filterHandler,
+        private $countriesUrl
     ) {}
 
     public function getFilteredCountries(string $sort, string $direction, string $countryFilter, string $regionFilter): array
     {
         $countryArray = $this->makeCallToGetCountries();
 
-        if (!empty($countryFilter)) {
-            $countryArray = $this->filterSmallerThan->filterSmallerThanByPopulation($countryArray, $countryFilter);
-        }
-
-        if (!empty($regionFilter)) {
-            $countryArray = $this->filterRegion->filterRegion($countryArray, $regionFilter);
-        }
+        $countryArray = $this->filterHandler->filter($countryArray, $countryFilter, $regionFilter);
 
         if (in_array($sort, ['population', 'region'])) {
             $countryArray = $this->sort->sort($countryArray, $sort, $direction);
@@ -39,13 +39,26 @@ class Country
         return $this->makeCallToGetCountries();
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     public function makeCallToGetCountries(): array
     {
-        $response = $this->httpClient->request(
-            'GET',
-            'https://restcountries.com/v2/all?fields=name,population,region' // Think what would happen if url, pass/token would change on the other side - what you would need to do in order to fix it without doeing any changes to the code ?
-        );
+        $response = $this->httpClient->request('GET', $this->countriesUrl . '/v2/all?fields=name,population,region', [
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
+        ]);
 
-        return $response->toArray(); // Also - good code is that could handle unexpected situations - what would happen if client o other obect in the chanin would throw exception ? And on this line - can you guaranty that $response alwyas return array ? maybe there wouldn't be any kind of response or response style would change ?
+        if (200 !== $response->getStatusCode()) {
+            throw new Exception('The call to get countries was not successful.');
+        }
+
+        $responseJson = $response->getContent();
+
+        return json_decode($responseJson, true);
     }
 }
