@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Service\Filter\FilterHandler;
-use Symfony\Component\Config\Definition\Exception\Exception;
+
+use Exception;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -18,6 +21,7 @@ class Country
         private HttpClientInterface $httpClient,
         private Sort $sort,
         private FilterHandler $filterHandler,
+        private CacheInterface $cache,
         private $countriesUrl
     ) {}
 
@@ -40,25 +44,20 @@ class Country
     }
 
     /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ClientExceptionInterface
+     * @throws InvalidArgumentException
      */
     public function makeCallToGetCountries(): array
     {
-        $response = $this->httpClient->request('GET', $this->countriesUrl . '/v2/all?fields=name,population,region', [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
+        $countries = $this->cache->get('countries_data', function() {
+            $response = $this->httpClient->request('GET', $this->countriesUrl . '/v2/all?fields=name,population,region');
 
-        if (200 !== $response->getStatusCode()) {
-            throw new Exception('The call to get countries was not successful.');
-        }
+            if (200 !== $response->getStatusCode()) {
+                throw new Exception('The call to get countries was not successful.');
+            }
 
-        $responseJson = $response->getContent();
+            return $response->toArray();
+        });
 
-        return json_decode($responseJson, true);
+        return $countries;
     }
 }
