@@ -7,12 +7,7 @@ namespace App\Service;
 use App\Service\Filter\FilterHandler;
 
 use Exception;
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Country
@@ -27,7 +22,7 @@ class Country
 
     public function getFilteredCountries(string $sort, string $direction, string $countryFilter, string $regionFilter): array
     {
-        $countryArray = $this->makeCallToGetCountries();
+        $countryArray = $this->getCachedCountries();
 
         $countryArray = $this->filterHandler->filter($countryArray, $countryFilter, $regionFilter);
 
@@ -40,24 +35,30 @@ class Country
 
     public function getUnfilteredCountries(): array
     {
-        return $this->makeCallToGetCountries();
+        return $this->getCachedCountries();
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     public function makeCallToGetCountries(): array
     {
-        $countries = $this->cache->get('countries_data', function() {
-            $response = $this->httpClient->request('GET', $this->countriesUrl . '/v2/all?fields=name,population,region');
+        $response = $this->httpClient->request('GET', $this->countriesUrl . '/v2/all?fields=name,population,region');
 
-            if (200 !== $response->getStatusCode()) {
-                throw new Exception('The call to get countries was not successful.');
-            }
+        if (200 !== $response->getStatusCode()) {
+            throw new Exception('The call to get countries was not successful.');
+        }
 
-            return $response->toArray();
-        });
+        return $response->toArray();
+    }
 
-        return $countries;
+    public function getCachedCountries(): array
+    {
+        $countries_data = $this->cache->getItem('countries_data');
+
+        if(!$countries_data->isHit()) {
+             $countries_data->set($this->makeCallToGetCountries());
+
+             $this->cache->save($countries_data);
+        }
+
+        return $countries_data->get();
     }
 }
