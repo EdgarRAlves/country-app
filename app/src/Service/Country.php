@@ -8,6 +8,11 @@ use App\Service\Filter\FilterHandler;
 
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Country
@@ -40,13 +45,21 @@ class Country
 
     public function makeCallToGetCountries(): array
     {
-        $response = $this->httpClient->request('GET', $this->countriesUrl . '/v2/all?fields=name,population,region');
+        try {
+            $response = $this->httpClient->request('GET', $this->countriesUrl . '/v2/all?fields=name,population,region');
 
-        if (200 !== $response->getStatusCode()) {
-            throw new Exception('The call to get countries was not successful.');
+            return $response->toArray();
+        } catch (TransportExceptionInterface $e) {
+            throw new Exception("Network error occurred.");
+        } catch (ClientExceptionInterface $e) {
+            throw new Exception("Client error caused the request to not be processed.");
+        } catch (DecodingExceptionInterface $e) {
+            throw new Exception("Error while trying to decode the response to an array.");
+        } catch (RedirectionExceptionInterface $e) {
+            throw new Exception("The number of maximum HTTP redirects messages was reached.");
+        } catch (ServerExceptionInterface $e) {
+            throw new Exception("The server is unable to fulfil the request.");
         }
-
-        return $response->toArray();
     }
 
     public function getCachedCountries(): array
