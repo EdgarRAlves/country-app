@@ -1,6 +1,6 @@
 # Country app
 
-This app was originally created as a task for a job interview. The main goal was so show a list of data retrieved from an external API (https://restcountries.com/). I'm trying to improve the app on regular basis.
+This web app shows a list of all the countries (data is retrieved from https://restcountries.com).
 
 ### Instructions on how to start the app:
 1. Docker Engine and Docker Compose have to be installed on your local machine
